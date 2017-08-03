@@ -1,2 +1,2 @@
-# ing-emi-calculator
-ing emi calculator
+# emi-calculator
+emi calculator
