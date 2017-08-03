@@ -44,6 +44,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
              color:red;
              margin-left: 33%;
             }
+            h2 {
+            text-align: center;
+            font-size: 175%;
+            color: #757575;
+            font-weight: 300;
+            }
              .select {
             width: 83%;
             height: 50px;
@@ -102,7 +108,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </div>
         
         <!--<input class="labeltext pass" id="amount" name="amount" type="text" value="{{amount::input}}" maxlength="10" placeholder="Amount" required="required"/>-->
-        <paper-input class="select pass" name="amount" id="amount" type="text" placeholder="Amount" maxlength="10" required error-message="Amount Required!" auto-validate allowed-pattern="[0-9]"></paper-input>
+        <paper-input class="select pass" name="amount" id="amount" type="text" placeholder="Amount" maxlength="10" required error-message="Amount Required!" auto-validate ></paper-input>
         <paper-dropdown-menu label="Loan Duration" class="select pass">
           <paper-listbox slot="dropdown-content" on-iron-select="_durationSelected">
             <paper-item>1 year</paper-item>
