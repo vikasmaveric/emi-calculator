@@ -108,7 +108,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </div>
         
         <!--<input class="labeltext pass" id="amount" name="amount" type="text" value="{{amount::input}}" maxlength="10" placeholder="Amount" required="required"/>-->
-        <paper-input class="select pass" name="amount" id="amount" type="text" placeholder="Amount" maxlength="10" required error-message="Amount Required!" auto-validate ></paper-input>
+        <paper-input class="select pass" name="amount" id="amount" type="text" placeholder="Amount" maxlength="10" required error-message="Amount Required!" auto-validate allowed-pattern="[0-9]"></paper-input>
         <paper-dropdown-menu label="Loan Duration" class="select pass">
           <paper-listbox slot="dropdown-content" on-iron-select="_durationSelected">
             <paper-item>1 year</paper-item>
@@ -139,7 +139,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </paper-dropdown-menu>
         
        
-        <paper-input class="select pass" name="roi" id="roi" type="text" placeholder="ROI" maxlength="10" required error-message="ROI Required!" auto-validate allowed-pattern="[0-9]+"></paper-input>
+        <paper-input class="select pass" name="roi" id="roi" type="text" placeholder="ROI" maxlength="10" required error-message="ROI Required!" auto-validate ></paper-input>
       
         <paper-button raised on-click="calculate" id="submitbtn" class="RegButton">CALCULATE</paper-button>
      </form>
