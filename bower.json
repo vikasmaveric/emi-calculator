@@ -1,0 +1,32 @@
+{
+  "name": "emi-calculator",
+  "version": "1.0.0",
+  "homepage": "https://github.com/vikasmaveric/emi-calculator",
+  "authors": [
+    "vikas"
+  ],
+  "description": "emi calculator",
+  "main": "https://github.com/vikasmaveric/emi-calculator",
+  "keywords": [
+    "{{site.project_title}}",
+    "webcomponents"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "polymer": "^2.0.2",
+    "paper-input": "PolymerElements/paper-input#^2.0.1",
+    "paper-item": "PolymerElements/paper-item#^2.0.0",
+    "paper-listbox": "PolymerElements/paper-listbox#^2.0.0",
+    "paper-dropdown-menu": "PolymerElements/paper-dropdown-menu#^2.0.0",
+    "neon-animation": "PolymerElements/neon-animation#^2.0.1",
+    "paper-button": "PolymerElements/paper-button#^2.0.0",
+    "web-animations-js": "^2.3.1"
+  }
+}

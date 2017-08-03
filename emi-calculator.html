@@ -1,0 +1,275 @@
+
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../paper-input/paper-input.html">
+<link rel="import" href="../iron-input/iron-input.html">
+<link rel="import" href="../paper-item/paper-item.html">
+<link rel="import" href="../paper-listbox/paper-listbox.html">
+<link rel="import" href="../paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../neon-animation/web-animations.html">
+<link rel="import" href="../paper-button/paper-button.html">
+
+<dom-module id="emi-calculator">
+   <template>
+        <style>
+            :host {
+                display: block;
+            }
+            ::selection {
+               background-color: #b5e2e7;
+            }
+
+            ::-moz-selection {
+            background-color: #8ac7d8;
+            }
+            
+             .container {
+            display: -webkit-flex;
+            display: flex;
+            height: 100%;
+            }
+            .content-container {
+              width: 100%;
+              height: 100%;
+            }
+             .invalid span{
+             color:red;
+             margin-left: 33%;
+            }
+             .select {
+            width: 83%;
+            height: 50px;
+            display: block;
+            margin: 0 auto 15px;
+            padding: 0 7px;
+            border: none;
+            color: #757575;
+            font-size: 16px;
+            }
+
+             .labeltext {
+            width: 80%;
+            height: 20px;
+            display: block;
+            margin: 0 auto 15px;
+            padding: 10px 7px;
+            border: none;
+            border-bottom: 1px solid #000000;
+            color: #757575;
+            font-size: 16px;
+            }
+            .RegButton {
+            position: relative;
+            width: 85%;
+            height: 50px;
+            display: block;
+            margin: 28px auto 30px;
+            color: white;
+            background-color: #ff6200;
+            border: none;
+            padding: 20px 0 0 120px;
+            }
+            #Reg {            
+            background-color: #fff;
+            -webkit-border-radius: 4px;
+            -moz-border-radius: 4px;
+            -ms-border-radius: 4px;
+            border-radius: 4px;
+            -webkit-box-shadow: 0 1px 5px rgba(0, 0, 0, 0.25);
+            -moz-box-shadow: 0 1px 5px rgba(0, 0, 0, 0.25);
+            box-shadow: 0 1px 5px rgba(0, 0, 0, 0.25);
+            min-width: 450px;
+            margin:10% auto;
+            }
+
+
+            
+</style>
+    <div class="container">
+    <div id="Reg">
+      <form name="form">
+        <h2>EMI Calculator</h2>
+         <div class="invalid">
+        <span hidden="{{hide}}">{{msg}}</span>
+        </div>
+        
+        <!--<input class="labeltext pass" id="amount" name="amount" type="text" value="{{amount::input}}" maxlength="10" placeholder="Amount" required="required"/>-->
+        <paper-input class="select pass" name="amount" id="amount" type="text" placeholder="Amount" maxlength="10" required error-message="Amount Required!" auto-validate allowed-pattern="[0-9]"></paper-input>
+        <paper-dropdown-menu label="Loan Duration" class="select pass">
+          <paper-listbox slot="dropdown-content" on-iron-select="_durationSelected">
+            <paper-item>1 year</paper-item>
+            <paper-item>2 year</paper-item>
+            <paper-item>3 year</paper-item>
+            <paper-item>4 year</paper-item>
+            <paper-item>5 year</paper-item>
+            <paper-item>6 year</paper-item>
+            <paper-item>7 year</paper-item>
+            <paper-item>8 year</paper-item>
+            <paper-item>9 year</paper-item>
+            <paper-item>10 year</paper-item>
+            <paper-item>11 year</paper-item>
+            <paper-item>12 year</paper-item>
+            <paper-item>13 year</paper-item>
+            <paper-item>14 year</paper-item>
+            <paper-item>15 year</paper-item>
+          </paper-listbox>
+        </paper-dropdown-menu>
+
+         <paper-dropdown-menu label="Loan Type" class="select pass">
+          <paper-listbox slot="dropdown-content" on-iron-select="_itemSelected">
+            <paper-item>Home Loan</paper-item>
+            <paper-item>Personal Loan</paper-item>
+            <paper-item>Car Loan</paper-item>
+            <paper-item>Education Loan</paper-item>
+          </paper-listbox>
+        </paper-dropdown-menu>
+        
+       
+        <paper-input class="select pass" name="roi" id="roi" type="text" placeholder="ROI" maxlength="10" required error-message="ROI Required!" auto-validate allowed-pattern="[0-9]+"></paper-input>
+      
+        <paper-button raised on-click="calculate" id="submitbtn" class="RegButton">CALCULATE</paper-button>
+     </form>
+     <div id="monthlyemi" hidden$={{emistatus}}><span class="labeltext">Your Monthly EMI:   [[emivalue]]</span>
+     <!--<span class="labeltext">ROI:   [[ratevalue]]</span>--></div>
+    </div>
+    
+  </div>
+  </template>
+  <script>
+    class emiCalculator extends Polymer.Element {
+      static get is() { return 'emi-calculator'; }
+      static get properties() {
+        return {
+          amount:{
+            type:Number,
+            observer:'checkAmount'
+          },
+          duration:{
+            type:String,
+            value:''
+          },
+           loantype:{
+            type:String,
+            value:''
+          },
+          emivalue:{
+            type:Number,
+            value:''
+          },
+          ratevalue:{
+            type:String,
+            value:''
+          },
+          emistatus:{
+            type:Boolean,
+            value:true,
+            reflectToAttribute:true
+          },
+          citizen:{
+            type:Boolean,
+            value:false,
+            
+          },
+           roi:{
+            type:Number,
+            value:'',
+            
+          },
+          sendvalues:{
+            type: Object
+          }
+         
+        };
+      }
+
+      checkAmount(){
+        
+         let amount= this.$.amount.value;
+        let validamount = /[^0-9]/;
+        if(validamount.test(amount)){
+            this.msg="Please Fill Valid Amount!";   
+             this.hide=false;
+          }
+          else{
+            this.hide=true;
+          }
+
+      }
+        _itemSelected (e) {
+    var selectedItem = e.target.selectedItem;
+    if (selectedItem) {
+      var loan=selectedItem.innerText.split(" ");
+      this.loantype=loan[0];
+      console.log("selected: " + this.loantype);
+    }
+  }
+    
+
+   _durationSelected (e) {
+    var selectedItem = e.target.selectedItem;
+    if (selectedItem) {
+      var time=selectedItem.innerText.split(" ");
+      this.duration=time[0];
+      console.log("selected: " + this.duration);
+    }
+  }
+      calculate(){
+        
+        let amount= this.$.amount.value;
+        let duration=this.duration;
+        let loantype=this.loantype;
+        
+       
+      console.log(amount);
+          
+        if(amount=="" || duration=="" || loantype=="")
+        {
+         // alert("in if");
+            this.msg="Please Fill All Fields!";   
+             this.hide=false;
+        }
+        else{
+        
+         var ajaxRequest= this.$.SendPkg;
+          this.hide=true;
+         
+          this.emistatus=false;
+           var princ = this.$.amount.value;
+          var term  = this.duration*12;
+          var intr   = this.$.roi.value/1200;
+
+    
+
+          this.emivalue = princ * intr / (1 - (Math.pow(1/(1 + intr), term)));
+        
+           //this.emivalue=res.detail.response.emi;
+        this.ratevalue=this.$.roi.value;
+           
+        }
+      }
+
+      handleResponse(res){
+       
+        console.log(res.detail.response);
+        this.emistatus=false;
+        this.emivalue=res.detail.response.emi;
+        this.ratevalue=res.detail.response.rateOfInterest;
+      }
+      _handleErrorResponse(event){
+        console.log(event.detail.request.xhr.response);
+        this.emistatus=true;
+      }
+    }
+
+    window.customElements.define(emiCalculator.is, emiCalculator);
+  </script>
+  
+</dom-module>
