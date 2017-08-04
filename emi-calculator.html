@@ -16,6 +16,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../paper-dropdown-menu/paper-dropdown-menu.html">
 <link rel="import" href="../neon-animation/web-animations.html">
 <link rel="import" href="../paper-button/paper-button.html">
+<link rel="import" href="../iron-ajax/iron-ajax.html">
 
 <dom-module id="emi-calculator">
    <template>
@@ -138,7 +139,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           </paper-listbox>
         </paper-dropdown-menu>
         
-       
+       <!--<paper-dropdown-menu label="Citizen" class="select pass" >
+          <paper-listbox slot="dropdown-content" on-iron-select="_citizenSelected" selected="0">
+            <paper-item>Non Senior Citizen</paper-item>
+            <paper-item>Senior Citizen</paper-item>
+            </paper-listbox>
+        </paper-dropdown-menu>-->
+
         <paper-input class="select pass" name="roi" id="roi" type="text" placeholder="ROI" maxlength="10" required error-message="ROI Required!" auto-validate ></paper-input>
       
         <paper-button raised on-click="calculate" id="submitbtn" class="RegButton">CALCULATE</paper-button>
@@ -148,6 +155,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </div>
     
   </div>
+  <!--<iron-ajax id="SendPkg"
+      url="http://10.138.65.52:8080/LoanManagementSystem/calculate/emi"
+      method="POST"
+      handle-as="json"
+      content-type="application/json"
+      body='{{sendvalues}}'
+      on-response="handleResponse"
+      on-error="_handleErrorResponse">
+    </iron-ajax>-->
   </template>
   <script>
     class emiCalculator extends Polymer.Element {
@@ -218,6 +234,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     }
   }
     
+  _citizenSelected (e) {
+    var selectedItem = e.target.selectedItem;
+    if (selectedItem.innerText == 'Non Senior Citizen') {
+      this.citizen=false;
+      
+    }
+    else{
+      this.citizen=true;
+    }
+    console.log("citizen: " + this.citizen);
+  }
 
    _durationSelected (e) {
     var selectedItem = e.target.selectedItem;
@@ -247,7 +274,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
          var ajaxRequest= this.$.SendPkg;
           this.hide=true;
          
+          /*this.sendvalues= {"amount": this.$.amount.value,
+            "year":this.duration,
+            "loanType":this.loantype,
+            "seniorCitizen":this.citizen} 
+           this.$.SendPkg.generateRequest();*/
           this.emistatus=false;
+
            var princ = this.$.amount.value;
           var term  = this.duration*12;
           var intr   = this.$.roi.value/1200;
@@ -256,7 +289,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
           this.emivalue = princ * intr / (1 - (Math.pow(1/(1 + intr), term)));
         
-           //this.emivalue=res.detail.response.emi;
+          
         this.ratevalue=this.$.roi.value;
            
         }
@@ -266,7 +299,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
        
         console.log(res.detail.response);
         this.emistatus=false;
-        this.emivalue=res.detail.response.emi;
+        this.emivalue=res.detail.response.monthlyEMI;
         this.ratevalue=res.detail.response.rateOfInterest;
       }
       _handleErrorResponse(event){
